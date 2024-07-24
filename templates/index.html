@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sudoku Wizard</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+
+<body>
+    <div class="header">
+        <h1 align="center">Sudoku Wizard</h1>
+    </div>
+    <div class="container">
+        <div style="width: 100%;">
+            {% if not solved_filename %}
+            <p id="flash-messages">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+            <ul class="flash-messages">
+                {% for message in messages %}
+                <li>
+                    {{ message }}
+                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+            </p>
+            {% endif %}
+            {% if not solved_filename %}
+            <div class="about">
+                <p>Stuck on a Sudoku puzzle and feeling frustrated? Don&apos;t worry, we&apos;ve got your back! Sudoku
+                    is a timeless game that challenges your brain with a 9x9 grid, where the goal is to fill in the
+                    numbers 1 to 9 without breaking the rules. Each number must appear exactly once in every row,
+                    column, and 3x3 box.<br><br>
+                    If you&apos;re tangled in a tricky Sudoku, just upload a clear picture of your puzzle, and let us
+                    work our magic. We&apos;ll solve it for you in no time, turning your confusion into clarity. Say
+                    goodbye to puzzle headaches and hello to effortless solutions!</p>
+            </div>
+            <div class="form-container">
+                <form method="post" action="/" enctype="multipart/form-data" class="form-but">
+                    <input type="file" id="fileInput" name="file" class="file-input" autocomplete="off" required>
+                    <button type="button" id="uploadButton" class="buttn btn-upload"><i class="fas fa-upload"></i>
+                        UPLOAD
+                        IMAGE</button>
+                    <button type="submit" id="submitButton" class=" buttn btn-submit"
+                        style="display:none;">Submit</button>
+                </form>
+            </div>
+
+            {% endif %}
+            {% if solved_filename %}
+            <div class="form-container">
+                <form method="post" action="{{ url_for('clear_uploads') }}">
+                    <button type="submit" id="clearButton" class="buttn btn-clear">Clear<i
+                            class="fas fa-trash"></i></button>
+                </form>
+            </div>
+            {% endif %}
+
+            <div class="images">
+                {% if filename %}
+                <div class="image-container">
+                    <h3>Uploaded Image:</h3>
+                    <img src="{{ url_for('display_image', filename=filename) }}" alt="Uploaded Image"
+                        class="img-responsive">
+                </div>
+                {% endif %}
+                {% if solved_filename %}
+                <div class="image-container">
+                    <h3>Solved Sudoku Image:</h3>
+                    <img src="{{ url_for('display_image', filename=solved_filename) }}" alt="Solved Sudoku Image"
+                        class="img-responsive">
+                </div>
+                {% endif %}
+            </div>
+
+            <div id="fileList" class="file-list"></div>
+        </div>
+        {% if not solved_filename %}
+        <div class="loader-wrapper" id="load" style="display:none;">
+            <p> Solving... </p>
+            <span class="loader"><span class="loader-inner"></span></span>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
