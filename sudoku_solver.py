@@ -173,7 +173,7 @@ def solve_sudoku_image(image_bytes):
         board_num = np.array(predicted_numbers).astype("uint8").reshape(9, 9)
 
         try:
-            solved_board_nums = func_timeout(30, get_board, args=(board_num,))
+            solved_board_nums = func_timeout(10, get_board, args=(board_num,))
             binArr = np.where(np.array(predicted_numbers) > 0, 0, 1)
             flat_solved_board_nums = solved_board_nums.flatten() * binArr
 
